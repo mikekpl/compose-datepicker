@@ -1,0 +1,23 @@
+*.iml
+.agent/
+/.agent
+.gradle/
+local.properties
+.idea/
+/.idea
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+app/build/
+compose-datepicker/build/
+
+# Gradle secrets - never commit these
+gradle.properties.local

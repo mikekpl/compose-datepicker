@@ -1,0 +1,4 @@
+<resources>
+
+    <style name="Theme.ComposeDatePicker" parent="Theme.MaterialComponents.Light" />
+</resources>
