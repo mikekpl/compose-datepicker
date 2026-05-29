@@ -1,16 +1,17 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import com.vanniktech.maven.publish.SonatypeHost
+import com.vanniktech.maven.publish.KotlinMultiplatform
+import com.vanniktech.maven.publish.JavadocJar
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.kotlin.compose)
-    id("maven-publish")
+    alias(libs.plugins.vanniktech.publish)
 }
 
-group = project.property("GROUP") as String
-version = project.property("VERSION_NAME") as String
 
 kotlin {
     androidTarget {
@@ -50,7 +51,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.mikelau.composedatepicker.library"
+    namespace = "dev.mikelau.composedatepicker.library"
     compileSdk = 37
     defaultConfig {
         minSdk = 24
@@ -61,20 +62,43 @@ android {
     }
 }
 
-publishing {
-    publications {
-        // Kotlin Multiplatform plugin automatically creates publications
-        // for each target. No need to manually define them unless customizing.
-    }
+mavenPublishing {
+    configure(
+        KotlinMultiplatform(
+            javadocJar = JavadocJar.Empty(),
+            sourcesJar = true,
+            androidVariantsToPublish = listOf("release"),
+        )
+    )
 
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/mikekpl/compose-datepicker")
-            credentials {
-                username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
-                password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+
+    signAllPublications()
+
+
+    pom {
+        name.set("Compose DatePicker")
+        description.set("A Compose Multiplatform date picker library for Android and iOS.")
+        url.set("https://github.com/mikekpl/compose-datepicker")
+        inceptionYear.set("2025")
+        licenses {
+            license {
+                name.set("The Apache License, Version 2.0")
+                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                distribution.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
             }
+        }
+        developers {
+            developer {
+                id.set("mikekpl")
+                name.set("Mike Lau")
+                url.set("https://github.com/mikekpl")
+            }
+        }
+        scm {
+            url.set("https://github.com/mikekpl/compose-datepicker")
+            connection.set("scm:git:git://github.com/mikekpl/compose-datepicker.git")
+            developerConnection.set("scm:git:ssh://git@github.com/mikekpl/compose-datepicker.git")
         }
     }
 }

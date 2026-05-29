@@ -18,7 +18,7 @@ import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
 import coil3.svg.SvgDecoder
-import com.github.mikekpl.compose_datepicker.generated.resources.Res
+import composedatepicker.compose_datepicker.generated.resources.Res
 import kotlinx.coroutines.launch
 import kotlinx.datetime.*
 import kotlin.time.Clock

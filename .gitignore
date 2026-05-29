@@ -21,3 +21,5 @@ compose-datepicker/build/
 
 # Gradle secrets - never commit these
 gradle.properties.local
+secrets.properties
+keystore.properties
