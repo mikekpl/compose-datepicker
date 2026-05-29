@@ -18,6 +18,7 @@ local.properties
 .cxx/
 app/build/
 compose-datepicker/build/
+.kotlin/
 
 # Gradle secrets - never commit these
 gradle.properties.local

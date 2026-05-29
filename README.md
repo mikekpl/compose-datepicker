@@ -17,6 +17,10 @@ A lightweight, customizable Date Picker for Jetpack Compose and Compose Multipla
 
 The library is available on **Maven Central**. No extra repository setup needed — `mavenCentral()` is included by default in Android and KMP projects.
 
+|Android|iOS|
+|--|--|
+|<img src="images/android.png" />|<img src="images/ios.png" />|
+
 ### Android (Kotlin DSL)
 
 Add the dependency to your module's `build.gradle.kts`:
