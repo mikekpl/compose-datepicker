@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
@@ -291,7 +292,7 @@ fun DatePickerActionButtons(
             border = androidx.compose.foundation.BorderStroke(2.dp, accentColor),
             colors = ButtonDefaults.outlinedButtonColors(contentColor = accentColor)
         ) {
-            Text(cancelText, fontWeight = FontWeight.Bold)
+            Text(cancelText, fontSize = 10.sp, maxLines = 1, fontWeight = FontWeight.Bold)
         }
         
         Button(
@@ -300,7 +301,7 @@ fun DatePickerActionButtons(
             shape = RoundedCornerShape(24.dp),
             colors = ButtonDefaults.buttonColors(containerColor = accentColor, contentColor = Color.White)
         ) {
-            Text(confirmText, fontWeight = FontWeight.Bold)
+            Text(confirmText, fontSize = 10.sp, maxLines = 1, fontWeight = FontWeight.Bold)
         }
     }
 }

@@ -23,7 +23,7 @@ Add the dependency to your module's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("dev.mikelau:compose-datepicker-android:1.0.0")
+    implementation("dev.mikelau:compose-datepicker-android:1.0.2")
 }
 ```
 
@@ -35,7 +35,7 @@ In your shared module's `build.gradle.kts`:
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("dev.mikelau:compose-datepicker:1.0.0")
+            implementation("dev.mikelau:compose-datepicker:1.0.2")
         }
     }
 }
@@ -45,7 +45,7 @@ kotlin {
 
 ```toml
 [versions]
-composeDatePicker = "1.0.0"
+composeDatePicker = "1.0.2"
 
 [libraries]
 compose-datepicker = { group = "dev.mikelau", name = "compose-datepicker", version.ref = "composeDatePicker" }

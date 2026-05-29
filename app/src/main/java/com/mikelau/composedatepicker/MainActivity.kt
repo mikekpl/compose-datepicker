@@ -112,7 +112,7 @@ fun AdaptiveDemoContent() {
                     properties = PopupProperties(focusable = true)
                 ) {
                     ComposeDatePicker(
-                        modifier = Modifier.widthIn(max = 400.dp),
+                        modifier = Modifier.fillMaxWidth(),
                         state = remember(selectionMode) { DatePickerState(selectionMode = selectionMode) },
                         onCancel = { showAnchored = false },
                         onConfirm = { state ->
