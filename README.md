@@ -1,5 +1,8 @@
 # ComposeDatePicker
 
+[![Maven Central](https://img.shields.io/maven-central/v/dev.mikelau/compose-datepicker.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/dev.mikelau/compose-datepicker)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 A lightweight, customizable Date Picker for Jetpack Compose and Compose Multiplatform, built with Material 3.
 
 ## Features
@@ -12,31 +15,56 @@ A lightweight, customizable Date Picker for Jetpack Compose and Compose Multipla
 
 ## Installation
 
-This library is hosted on GitHub Packages. To use it, you need to add the repository to your `settings.gradle.kts`:
+The library is available on **Maven Central**. No extra repository setup needed — `mavenCentral()` is included by default in Android and KMP projects.
+
+### Android (Kotlin DSL)
+
+Add the dependency to your module's `build.gradle.kts`:
 
 ```kotlin
-dependencyResolutionManagement {
-    repositories {
-        google()
-        mavenCentral()
-        maven {
-            url = uri("https://maven.pkg.github.com/mikekpl/compose-datepicker")
-            credentials {
-                username = "YOUR_GITHUB_USERNAME"
-                password = "YOUR_GITHUB_PERSONAL_ACCESS_TOKEN"
-            }
+dependencies {
+    implementation("dev.mikelau:compose-datepicker-android:1.0.0")
+}
+```
+
+### Kotlin Multiplatform (KMP)
+
+In your shared module's `build.gradle.kts`:
+
+```kotlin
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation("dev.mikelau:compose-datepicker:1.0.0")
         }
     }
 }
 ```
 
-Then, add the dependency to your `build.gradle.kts`:
+### Version Catalog (`libs.versions.toml`)
+
+```toml
+[versions]
+composeDatePicker = "1.0.0"
+
+[libraries]
+compose-datepicker = { group = "dev.mikelau", name = "compose-datepicker", version.ref = "composeDatePicker" }
+```
+
+Then in `build.gradle.kts`:
 
 ```kotlin
-dependencies {
-    implementation("com.github.mikekpl:compose-datepicker:1.0.0")
+commonMain.dependencies {
+    implementation(libs.compose.datepicker)
 }
 ```
+
+## Requirements
+
+- **Android**: minSdk 24+
+- **Kotlin**: 2.0+
+- **Compose Multiplatform**: 1.6+
+- **Targets**: Android, iOS (arm64, simulatorArm64)
 
 ## Usage
 
