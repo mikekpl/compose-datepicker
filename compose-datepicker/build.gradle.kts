@@ -52,7 +52,7 @@ kotlin {
 
 android {
     namespace = "dev.mikelau.composedatepicker.library"
-    compileSdk = 37
+    compileSdk = 36
     defaultConfig {
         minSdk = 24
     }
@@ -80,7 +80,7 @@ mavenPublishing {
         name.set("Compose DatePicker")
         description.set("A Compose Multiplatform date picker library for Android and iOS.")
         url.set("https://github.com/mikekpl/compose-datepicker")
-        inceptionYear.set("2025")
+        inceptionYear.set("2026")
         licenses {
             license {
                 name.set("The Apache License, Version 2.0")
