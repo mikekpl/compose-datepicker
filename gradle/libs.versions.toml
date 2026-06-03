@@ -2,7 +2,7 @@
 agp = "9.2.1"
 mavenPublish = "0.32.0"
 kotlin = "2.3.21"
-composeMultiplatform = "1.11.0"
+composeMultiplatform = "1.11.1"
 coreKtx = "1.18.0"
 activityCompose = "1.13.0"
 composeBom = "2026.05.01"

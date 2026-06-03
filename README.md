@@ -15,11 +15,20 @@ A lightweight, customizable Date Picker for Jetpack Compose and Compose Multipla
 
 ## Installation
 
-The library is available on **Maven Central**. No extra repository setup needed — `mavenCentral()` is included by default in Android and KMP projects.
+The library is available on **Maven Central**. Add the repository to your `settings.gradle.kts` if not already present:
 
-|Android|iOS|
-|--|--|
-|<img src="images/android.png" />|<img src="images/ios.png" />|
+```kotlin
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+```
+
+|Sample App|Android|iOS|
+|--|--|--|
+|<img src="images/sampleapp.gif" />|<img src="images/android.png" />|<img src="images/ios.png" />|
 
 ### Android (Kotlin DSL)
 
@@ -27,7 +36,7 @@ Add the dependency to your module's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("dev.mikelau:compose-datepicker-android:1.0.2")
+    implementation("dev.mikelau:compose-datepicker-android:1.0.3")
 }
 ```
 
@@ -39,7 +48,7 @@ In your shared module's `build.gradle.kts`:
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("dev.mikelau:compose-datepicker:1.0.2")
+            implementation("dev.mikelau:compose-datepicker:1.0.3")
         }
     }
 }
@@ -49,7 +58,7 @@ kotlin {
 
 ```toml
 [versions]
-composeDatePicker = "1.0.2"
+composeDatePicker = "1.0.3"
 
 [libraries]
 compose-datepicker = { group = "dev.mikelau", name = "compose-datepicker", version.ref = "composeDatePicker" }
