@@ -52,7 +52,7 @@ kotlin {
 
 android {
     namespace = "dev.mikelau.composedatepicker.library"
-    compileSdk = 36
+    compileSdk = 37
     defaultConfig {
         minSdk = 24
     }
