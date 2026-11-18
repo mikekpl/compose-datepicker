@@ -24,11 +24,6 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.*
 import kotlin.time.Clock
 
-// Define default colors if theme is not available
-private val DefaultPickerGreen = Color(0xFF558B2F)
-private val DefaultPickerOrange = Color(0xFFFFB300)
-private val DefaultPickerLightGreen = Color(0xFFDCEDC8)
-
 @Composable
 private fun SvgIcon(
     resourcePath: String,
@@ -62,6 +57,12 @@ private fun SvgIcon(
     }
 }
 
+/**
+ * Card-style date picker, usable inside a Dialog or an anchored Popup.
+ *
+ * [primaryColor], [accentColor] and [rangeColor] are kept for backward compatibility and seed the
+ * defaults of [colors]. When [colors] is passed explicitly, it takes precedence.
+ */
 @Composable
 fun ComposeDatePicker(
     modifier: Modifier = Modifier,
@@ -71,13 +72,18 @@ fun ComposeDatePicker(
     primaryColor: Color = DefaultPickerGreen,
     accentColor: Color = DefaultPickerOrange,
     rangeColor: Color = DefaultPickerLightGreen,
+    colors: ComposeDatePickerColors = ComposeDatePickerDefaults.colors(
+        primaryColor = primaryColor,
+        accentColor = accentColor,
+        rangeColor = rangeColor,
+    ),
     onCancel: () -> Unit = {},
     onConfirm: (DatePickerState) -> Unit = {}
 ) {
     Card(
         modifier = modifier.padding(16.dp),
         shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = colors.containerColor),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Column(
@@ -88,12 +94,14 @@ fun ComposeDatePicker(
             DatePickerHeader(
                 currentMonth = state.currentMonth,
                 onPreviousMonth = { state.previousMonth() },
-                onNextMonth = { state.nextMonth() }
+                onNextMonth = { state.nextMonth() },
+                titleColor = colors.monthTitleColor,
+                iconColor = colors.navigationIconColor,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            DayOfWeekHeader()
+            DayOfWeekHeader(textColor = colors.dayOfWeekTextColor)
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -101,6 +109,7 @@ fun ComposeDatePicker(
                 state = state,
                 primaryColor = primaryColor,
                 rangeColor = rangeColor,
+                colors = colors,
                 onDateSelected = { state.onDateSelected(it) }
             )
 
@@ -110,6 +119,7 @@ fun ComposeDatePicker(
                 cancelText = cancelText,
                 confirmText = confirmText,
                 accentColor = accentColor,
+                colors = colors,
                 onCancel = onCancel,
                 onConfirm = { onConfirm(state) }
             )
@@ -121,7 +131,9 @@ fun ComposeDatePicker(
 fun DatePickerHeader(
     currentMonth: LocalDate,
     onPreviousMonth: () -> Unit,
-    onNextMonth: () -> Unit
+    onNextMonth: () -> Unit,
+    titleColor: Color = Color.Unspecified,
+    iconColor: Color = Color(0xFF1C1C1C),
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -131,27 +143,30 @@ fun DatePickerHeader(
         IconButton(onClick = onPreviousMonth) {
             SvgIcon(
                 resourcePath = "files/ic_keyboard_arrow_left.svg",
-                contentDescription = "Previous Month"
+                contentDescription = "Previous Month",
+                tint = iconColor
             )
         }
 
         Text(
             text = "${currentMonth.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${currentMonth.year}",
             style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
+            color = titleColor
         )
 
         IconButton(onClick = onNextMonth) {
             SvgIcon(
                 resourcePath = "files/ic_keyboard_arrow_right.svg",
-                contentDescription = "Next Month"
+                contentDescription = "Next Month",
+                tint = iconColor
             )
         }
     }
 }
 
 @Composable
-fun DayOfWeekHeader() {
+fun DayOfWeekHeader(textColor: Color = Color.Gray) {
     Row(modifier = Modifier.fillMaxWidth()) {
         val days = listOf("S", "M", "T", "W", "T", "F", "S")
         days.forEach { day ->
@@ -161,7 +176,7 @@ fun DayOfWeekHeader() {
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Medium,
-                color = Color.Gray
+                color = textColor
             )
         }
     }
@@ -172,6 +187,10 @@ fun DatePickerGrid(
     state: DatePickerState,
     primaryColor: Color,
     rangeColor: Color,
+    colors: ComposeDatePickerColors = ComposeDatePickerDefaults.colors(
+        primaryColor = primaryColor,
+        rangeColor = rangeColor,
+    ),
     onDateSelected: (LocalDate) -> Unit
 ) {
     val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
@@ -189,12 +208,16 @@ fun DatePickerGrid(
                         contentAlignment = Alignment.Center
                     ) {
                         if (date != null) {
-                            val isSelected = when (state.selectionMode) {
-                                DatePickerState.SelectionMode.Single -> date == state.selectedDate
-                                DatePickerState.SelectionMode.Range -> date == state.rangeStart || date == state.rangeEnd
+                            val isRange = state.selectionMode == DatePickerState.SelectionMode.Range
+                            val isRangeStart = isRange && date == state.rangeStart
+                            val isRangeEnd = isRange && date == state.rangeEnd
+                            val isSelected = if (isRange) {
+                                isRangeStart || isRangeEnd
+                            } else {
+                                date == state.selectedDate
                             }
                             
-                            val isInRange = state.selectionMode == DatePickerState.SelectionMode.Range &&
+                            val isInRange = isRange &&
                                     state.rangeStart != null && state.rangeEnd != null &&
                                     date > state.rangeStart!! && date < state.rangeEnd!!
 
@@ -205,6 +228,9 @@ fun DatePickerGrid(
                                 isToday = date == today,
                                 primaryColor = primaryColor,
                                 rangeColor = rangeColor,
+                                colors = colors,
+                                isRangeStart = isRangeStart,
+                                isRangeEnd = isRangeEnd,
                                 onClick = { onDateSelected(date) }
                             )
                         }
@@ -229,8 +255,27 @@ fun DatePickerDay(
     isToday: Boolean,
     primaryColor: Color,
     rangeColor: Color,
+    colors: ComposeDatePickerColors = ComposeDatePickerDefaults.colors(
+        primaryColor = primaryColor,
+        rangeColor = rangeColor,
+    ),
+    isRangeStart: Boolean = false,
+    isRangeEnd: Boolean = false,
     onClick: () -> Unit
 ) {
+    val circleColor = when {
+        !isSelected -> Color.Transparent
+        isRangeEnd && !isRangeStart -> colors.rangeEndColor
+        isRangeStart -> colors.rangeStartColor
+        else -> colors.selectedDayColor
+    }
+    val textColor = when {
+        isSelected -> colors.selectedDayTextColor
+        isInRange -> colors.inRangeDayTextColor
+        isToday -> colors.todayTextColor
+        else -> colors.dayTextColor
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -242,7 +287,7 @@ fun DatePickerDay(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.7f)
-                    .background(rangeColor)
+                    .background(colors.rangeHighlightColor.withHighlightAlpha(colors.rangeHighlightAlpha))
             )
         }
 
@@ -250,12 +295,12 @@ fun DatePickerDay(
             modifier = Modifier
                 .fillMaxSize(0.85f)
                 .clip(CircleShape)
-                .background(if (isSelected) primaryColor else Color.Transparent),
+                .background(circleColor),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = date.day.toString(),
-                color = if (isSelected) Color.White else Color.Black,
+                color = textColor,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = if (isSelected || isToday) FontWeight.Bold else FontWeight.Normal
             )
@@ -263,7 +308,7 @@ fun DatePickerDay(
             if (isToday && !isSelected) {
                 androidx.compose.foundation.Canvas(modifier = Modifier.matchParentSize()) {
                     drawCircle(
-                        color = primaryColor,
+                        color = colors.todayOutlineColor,
                         style = androidx.compose.ui.graphics.drawscope.Stroke(width = 2.dp.toPx())
                     )
                 }
@@ -277,6 +322,7 @@ fun DatePickerActionButtons(
     cancelText: String,
     confirmText: String,
     accentColor: Color,
+    colors: ComposeDatePickerColors = ComposeDatePickerDefaults.colors(accentColor = accentColor),
     onCancel: () -> Unit,
     onConfirm: () -> Unit
 ) {
@@ -289,8 +335,8 @@ fun DatePickerActionButtons(
             onClick = onCancel,
             modifier = Modifier.weight(1f),
             shape = RoundedCornerShape(24.dp),
-            border = androidx.compose.foundation.BorderStroke(2.dp, accentColor),
-            colors = ButtonDefaults.outlinedButtonColors(contentColor = accentColor)
+            border = androidx.compose.foundation.BorderStroke(2.dp, colors.cancelButtonColor),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = colors.cancelButtonColor)
         ) {
             Text(cancelText, fontSize = 10.sp, maxLines = 1, fontWeight = FontWeight.Bold)
         }
@@ -299,7 +345,10 @@ fun DatePickerActionButtons(
             onClick = onConfirm,
             modifier = Modifier.weight(1f),
             shape = RoundedCornerShape(24.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = accentColor, contentColor = Color.White)
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colors.confirmButtonColor,
+                contentColor = colors.confirmButtonTextColor
+            )
         ) {
             Text(confirmText, fontSize = 10.sp, maxLines = 1, fontWeight = FontWeight.Bold)
         }

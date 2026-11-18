@@ -111,16 +111,84 @@ ComposeDatePicker(
 
 ### Customizing Colors
 
-You can easily override the default colors to match your brand:
+#### Quick (all versions)
+
+The three original color parameters still work exactly as before:
 
 ```kotlin
 ComposeDatePicker(
-    primaryColor = Color(0xFF6200EE),
-    accentColor = Color(0xFF03DAC6),
-    rangeColor = Color(0xFFBB86FC),
+    primaryColor = Color(0xFF6200EE), // selected day, range start/end, today outline
+    accentColor = Color(0xFF03DAC6),  // confirm / cancel buttons
+    rangeColor = Color(0xFFBB86FC),   // range highlight band
     onConfirm = { /* ... */ }
 )
 ```
+
+#### Full control (newer versions)
+
+Pass `colors` to customize the calendar background, text, start/end highlights and range highlight alpha. This applies to every `ComposeDatePicker` usage — inside a `Dialog`, an anchored `Popup` dropdown, or inline:
+
+```kotlin
+ComposeDatePicker(
+    state = state,
+    colors = ComposeDatePickerDefaults.colors(
+        containerColor = Color(0xFF1E1D22),      // calendar background
+        monthTitleColor = Color.White,
+        navigationIconColor = Color.White,       // previous / next month arrows
+        dayOfWeekTextColor = Color(0xFFA1A1AA),
+        dayTextColor = Color(0xFFD4D4D8),
+        todayTextColor = Color.White,
+        todayOutlineColor = Color(0xFFFFB547),
+        inRangeDayTextColor = Color(0xFFD4D4D8),
+        selectedDayTextColor = Color.White,
+        selectedDayColor = Color(0xFFFFB547),    // Single mode
+        rangeStartColor = Color(0xFFFFB547),
+        rangeEndColor = Color(0xFFFFB547),
+        rangeHighlightColor = Color(0xFFFFB547),
+        rangeHighlightAlpha = 0.2f,              // multiplied into rangeHighlightColor's alpha
+        confirmButtonColor = Color(0xFFFFB547),
+        confirmButtonTextColor = Color.White,
+        cancelButtonColor = Color(0xFFFFB547),   // outline + text
+    ),
+    onCancel = { /* ... */ },
+    onConfirm = { /* ... */ }
+)
+```
+
+Every parameter is optional — override only what you need; the rest keep the original look. You can also combine both styles: `ComposeDatePickerDefaults.colors(primaryColor = ..., accentColor = ..., rangeColor = ...)` seeds the defaults the same way the legacy parameters do.
+
+> **Migrating:** no changes are required. If you don't pass `colors`, the picker looks identical to previous versions, and `primaryColor` / `accentColor` / `rangeColor` keep working. When `colors` is passed, it takes precedence over those three parameters.
+
+### Bottom Sheet
+
+A scrolling, month-by-month calendar inside a modal bottom sheet. Supports both Single and Range selection via `DatePickerState.selectionMode`. There is no cancel button — swipe down to dismiss; tap **Done** to confirm.
+
+```kotlin
+var showSheet by remember { mutableStateOf(false) }
+
+if (showSheet) {
+    ComposeDatePickerBottomSheet(
+        state = remember { DatePickerState(selectionMode = DatePickerState.SelectionMode.Range) },
+        confirmText = "Done",
+        colors = DatePickerBottomSheetDefaults.colors(
+            containerColor = Color(0xFF1E1D22),
+            dayTextColor = Color(0xFFD4D4D8),
+            rangeStartColor = Color(0xFFFFB547),
+            rangeEndColor = Color(0xFFFFB547),
+            rangeHighlightColor = Color(0xFFFFB547),
+            rangeHighlightAlpha = 0.2f,
+            selectedDayColor = Color(0xFFFFB547), // Single mode
+        ),
+        onDismissRequest = { showSheet = false },
+        onConfirm = { state ->
+            println("Selected range: ${state.rangeStart} to ${state.rangeEnd}")
+            showSheet = false
+        }
+    )
+}
+```
+
+Other options: `firstDayOfWeek` (default Monday), `monthsBefore` / `monthsAfter`, `maxHeightFraction`, `monthTitle` and `dayOfWeekLabel` formatters.
 
 ## DatePickerState
 
