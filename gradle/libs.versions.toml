@@ -1,6 +1,6 @@
 [versions]
 agp = "9.5.1"
-mavenPublish = "0.33.0"
+mavenPublish = "0.37.0"
 kotlin = "2.4.21"
 composeMultiplatform = "1.12.2"
 coreKtx = "1.19.1"

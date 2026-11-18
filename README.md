@@ -11,7 +11,8 @@ A lightweight, customizable Date Picker for Jetpack Compose and Compose Multipla
 - ↔️ **Range Date Selection**: Easy start and end date selection with range highlighting.
 - 🎨 **Material 3**: Designed with modern Material 3 components and principles.
 - 🌍 **Compose Multiplatform**: Ready for Android and iOS.
-- 🛠️ **Customizable**: Easy to theme with your application's colors.
+- 🧾 **Bottom Sheet**: Scrolling month-by-month calendar in a swipe-to-dismiss bottom sheet.
+- 🛠️ **Customizable**: Background, text, selection, range start/end and range highlight alpha colors.
 
 ## Installation
 
@@ -36,7 +37,7 @@ Add the dependency to your module's `build.gradle.kts`:
 
 ```kotlin
 dependencies {
-    implementation("dev.mikelau:compose-datepicker-android:1.0.3")
+    implementation("dev.mikelau:compose-datepicker-android:1.1.0")
 }
 ```
 
@@ -48,7 +49,7 @@ In your shared module's `build.gradle.kts`:
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            implementation("dev.mikelau:compose-datepicker:1.0.3")
+            implementation("dev.mikelau:compose-datepicker:1.1.0")
         }
     }
 }
@@ -58,7 +59,7 @@ kotlin {
 
 ```toml
 [versions]
-composeDatePicker = "1.0.3"
+composeDatePicker = "1.1.0"
 
 [libraries]
 compose-datepicker = { group = "dev.mikelau", name = "compose-datepicker", version.ref = "composeDatePicker" }
@@ -124,7 +125,7 @@ ComposeDatePicker(
 )
 ```
 
-#### Full control (newer versions)
+#### Full control (1.1.0+)
 
 Pass `colors` to customize the calendar background, text, start/end highlights and range highlight alpha. This applies to every `ComposeDatePicker` usage — inside a `Dialog`, an anchored `Popup` dropdown, or inline:
 
@@ -159,7 +160,7 @@ Every parameter is optional — override only what you need; the rest keep the o
 
 > **Migrating:** no changes are required. If you don't pass `colors`, the picker looks identical to previous versions, and `primaryColor` / `accentColor` / `rangeColor` keep working. When `colors` is passed, it takes precedence over those three parameters.
 
-### Bottom Sheet
+### Bottom Sheet (1.1.0+)
 
 A scrolling, month-by-month calendar inside a modal bottom sheet. Supports both Single and Range selection via `DatePickerState.selectionMode`. There is no cancel button — swipe down to dismiss; tap **Done** to confirm.
 

@@ -26,7 +26,7 @@ object DatePickerUtils {
             days.add(null)
         }
         
-        for (day in 1..lastDayOfMonth.dayOfMonth) {
+        for (day in 1..lastDayOfMonth.day) {
             days.add(LocalDate(month.year, month.month, day))
         }
         
